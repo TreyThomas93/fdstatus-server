@@ -1,6 +1,5 @@
 from flask import Blueprint, current_app, request, jsonify
 from assets.extensions import mongo, bcrypt
-from trestle import Trestle
 from pprint import pprint
 from assets.decors import errorhandler, getaddress
 from datetime import datetime, timedelta
@@ -9,12 +8,10 @@ from bson import json_util
 import jwt
 import time
 
-trestle = Trestle()
-
-app_auth = Blueprint("app/auth", __name__, url_prefix="/app/auth")
+auth = Blueprint("auth", __name__, url_prefix="/auth")
 
 
-@app_auth.route("/login", methods=["POST"])
+@auth.route("/login", methods=["POST"])
 @getaddress
 @errorhandler
 def login():
@@ -48,7 +45,7 @@ def login():
     return jsonify({"error": "Invalid Username and/or Password"}), 401
 
 
-@app_auth.route("/checkAuthToken", methods=["GET"])
+@auth.route("/checkAuthToken", methods=["GET"])
 @errorhandler
 def checkAuthToken():
     """ used to check if user is authorized to view pages
@@ -82,7 +79,7 @@ def checkAuthToken():
     return jsonify({"error": "Token Does Not Exist"}), 401
 
 
-@app_auth.route("/logout", methods=["GET"])
+@auth.route("/logout", methods=["GET"])
 @errorhandler
 @getaddress
 def logout():

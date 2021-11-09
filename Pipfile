@@ -15,10 +15,7 @@ python-dotenv = "*"
 flask-bcrypt = "*"
 certifi = "*"
 requests = "*"
-oauthlib = "*"
-requests-oauthlib = "*"
 flask-limiter = "*"
-pytz = "*"
 pyjwt = "*"
 
 [requires]

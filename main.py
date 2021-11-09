@@ -1,8 +1,7 @@
 from assets.multifilehandler import MultiFileHandler
 from assets.extensions import mongo, bcrypt
-from api.app.routes import app_api
-from auth.app.routes import app_auth
-# from logging import Formatter
+from api.routes import api
+from auth.routes import auth
 from assets.timeformatter import Formatter
 from flask_limiter.util import get_remote_address
 from flask_limiter import Limiter
@@ -26,10 +25,6 @@ def create_app():
 
     app.config["MONGO_URI"] = os.getenv('MONGO_URI')
 
-    app.config["CLIENT_ID"] = os.getenv('CLIENT_ID')
-
-    app.config["CLIENT_SECRET"] = os.getenv('CLIENT_SECRET')
-
     app.config["ENV"] = os.getenv('ENV')
 
     app.config["DEBUG"] = os.getenv('DEBUG')
@@ -46,10 +41,10 @@ def create_app():
         limiter = Limiter(app, key_func=get_remote_address)
 
         # 10 requests per minute allowed for all app/api extensions
-        limiter.limit("10/minute")(app_api)
+        limiter.limit("10/minute")(api)
 
         # 5 requests per minute allowed for all app/auth extensions
-        limiter.limit("5/minute")(app_auth)
+        limiter.limit("5/minute")(auth)
 
         file_handler = MultiFileHandler(filename='logs/error.log', mode='a')
 
@@ -61,9 +56,9 @@ def create_app():
 
         limiter.logger.addHandler(file_handler)
 
-    app.register_blueprint(app_api)
+    app.register_blueprint(api)
 
-    app.register_blueprint(app_auth)
+    app.register_blueprint(auth)
 
     return app
 
